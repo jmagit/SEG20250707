@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,7 +25,8 @@ import jakarta.persistence.Table;
 @Table(name="film_category")
 @NamedQuery(name="FilmCategory.findAll", query="SELECT f FROM FilmCategory f")
 public class FilmCategory implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private FilmCategoryPK id;

@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import jakarta.persistence.*;
 
@@ -9,8 +10,9 @@ import jakarta.persistence.*;
  */
 @Embeddable
 public class FilmActorPK implements Serializable {
-	//default serial version id, required for serializable classes.
-	private static final long serialVersionUID = 1L;
+    //default serial version id, required for serializable classes.
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 	@Column(name="actor_id", insertable=false, updatable=false)
 	private int actorId;

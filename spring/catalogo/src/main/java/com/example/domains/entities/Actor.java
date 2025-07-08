@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ import jakarta.validation.constraints.Size;
 @Table(name="actor")
 @NamedQuery(name="Actor.findAll", query="SELECT a FROM Actor a")
 public class Actor extends AbstractEntity<Actor> implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

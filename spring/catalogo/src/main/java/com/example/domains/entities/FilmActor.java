@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import jakarta.persistence.*;
 
@@ -16,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name="film_actor")
 @NamedQuery(name="FilmActor.findAll", query="SELECT f FROM FilmActor f")
 public class FilmActor implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private FilmActorPK id;

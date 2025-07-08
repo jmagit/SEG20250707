@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +25,8 @@ import java.util.Objects;
 @Table(name="language")
 @NamedQuery(name="Language.findAll", query="SELECT l FROM Language l")
 public class Language extends AbstractEntity<Language> implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
     public static class Partial {}
     public static class Complete extends Partial {}
 

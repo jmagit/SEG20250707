@@ -1,7 +1,10 @@
 package com.example.exceptions;
 
+import java.io.Serial;
+
 public class NotFoundException extends Exception {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 	private final static String MESSAGE_STRING = "Not found";
 	
 	public NotFoundException() {

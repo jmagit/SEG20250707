@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -52,7 +53,8 @@ import jakarta.validation.constraints.Size;
 @Table(name = "film")
 @NamedQuery(name = "Film.findAll", query = "SELECT f FROM Film f")
 public class Film extends AbstractEntity<Film> implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 	public static enum Rating {
 		GENERAL_AUDIENCES("G"), PARENTAL_GUIDANCE_SUGGESTED("PG"), PARENTS_STRONGLY_CAUTIONED("PG-13"), RESTRICTED("R"),
@@ -489,29 +491,18 @@ public class Film extends AbstractEntity<Film> implements Serializable {
 	}
 
 	public Film merge(Film target) {
-//		BeanUtils.copyProperties(this, target, "filmId" , "filmActors", "filmCategories");
-		target.title = title;
-		target.description = description;
-		target.releaseYear = releaseYear;
-		target.language = language;
-		target.languageVO = languageVO;
-		target.rentalDuration = rentalDuration;
-		target.rentalRate = rentalRate;
-		target.length = length;
-		target.replacementCost = replacementCost;
-		target.rating = rating;
+		BeanUtils.copyProperties(this, target, "filmId", "specialFeatures", "actors", "categories");
 		target.specialFeatures = EnumSet.copyOf(specialFeatures);
+		
 		// Borra los actores que sobran
-		target.getActors().stream().filter(item -> !getActors().contains(item))
-				.forEach(item -> target.removeActor(item));
+		target.filmActors.removeIf(item -> !filmActors.contains(item));
 		// Añade los actores que faltan
-		getActors().stream().filter(item -> !target.getActors().contains(item)).forEach(item -> target.addActor(item));
+		target.filmActors.addAll(filmActors.stream().filter(item -> !target.filmActors.contains(item)).toList());
+		
 		// Borra las categorias que sobran
-		target.getCategories().stream().filter(item -> !getCategories().contains(item))
-				.forEach(item -> target.removeCategory(item));
+		target.filmCategories.removeIf(item -> !filmCategories.contains(item));
 		// Añade las categorias que faltan
-		getCategories().stream().filter(item -> !target.getCategories().contains(item))
-				.forEach(item -> target.addCategory(item));
+		target.filmCategories.addAll(filmCategories.stream().filter(item -> !target.filmCategories.contains(item)).toList());
 		
 		// Bug de Hibernate
 		target.filmActors.forEach(o -> o.prePersiste());
@@ -524,7 +515,7 @@ public class Film extends AbstractEntity<Film> implements Serializable {
 	@PostPersist
 	@PostUpdate
 	public void prePersiste() {
-		System.err.println("prePersiste(): Bug Hibernate");
+//		System.err.println("prePersiste(): Bug Hibernate");
 		filmActors.forEach(o -> o.prePersiste());
 		filmCategories.forEach(o -> o.prePersiste());
 	}

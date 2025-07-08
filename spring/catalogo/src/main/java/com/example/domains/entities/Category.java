@@ -1,5 +1,6 @@
 package com.example.domains.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -23,7 +24,8 @@ import java.util.Objects;
 @Table(name="category")
 @NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
 public class Category extends AbstractEntity<Category> implements Serializable {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

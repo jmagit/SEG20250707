@@ -1,7 +1,10 @@
 package com.example.exceptions;
 
+import java.io.Serial;
+
 public class DuplicateKeyException extends Exception {
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 	private final static String MESSAGE_STRING = "Duplicate key";
 	
 	public DuplicateKeyException() {
