@@ -30,6 +30,9 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/no-inferrable-types": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      "@angular-eslint/prefer-inject": "off",
     },
   },
   {

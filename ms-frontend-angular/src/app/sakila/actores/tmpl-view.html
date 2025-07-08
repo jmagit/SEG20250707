@@ -1,0 +1,13 @@
+<h1 class="display-1">Actor</h1>
+<dl class="row">
+  <dt class="col-md-2 col-lg-1">Ref.</dt>
+  <dd class="col-md-10 col-lg-11">{{VM.Elemento.id}}</dd>
+  <dt class="col-md-2 col-lg-1">Nombre</dt>
+  <dd class="col-md-10 col-lg-11">{{VM.Elemento.nombre}}</dd>
+  <dt class="col-md-2 col-lg-1">Apellidos</dt>
+  <dd class="col-md-10 col-lg-11">{{VM.Elemento.apellidos}}</dd>
+</dl>
+<app-peliculas-list-body [Listado]="VM.peliculas" (imageError)="VM.imageErrorHandler($event)" />
+<div>
+  <app-form-buttons (cancel)="VM.cancel()" />
+</div>

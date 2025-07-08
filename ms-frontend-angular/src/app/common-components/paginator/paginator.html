@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="first-fill" fill="currentColor" viewBox="0 0 448 512">
+    <path
+      d="M416 294.9c0 8.8-7.2 16-16 16H256v93.9c0 7.1-8.6 10.7-13.6 5.7L98.8 267.3c-6.3-6.3-6.3-16.4 0-22.7l143.5-143.1c5-5 13.6-1.5 13.6 5.7v93.9h144c8.8 0 16 7.2 16 16v77.8m32.1 0v-77.7c0-26.5-21.5-48-48-48H288v-61.9c0-35.5-43-53.5-68.2-28.3L76.2 222c-18.8 18.8-18.8 49.2 0 68l143.5 143.1c25.1 25.1 68.2 7.3 68.2-28.3v-61.9h112c26.6 0 48.1-21.6 48.1-48zM12 448h8c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12h-8C5.4 64 0 69.4 0 76v360c0 6.6 5.4 12 12 12z" />
+  </symbol>
+  <symbol id="previous-fill" fill="currentColor" viewBox="0 0 448 512">
+    <path
+      d="M416.012 299.427c0 11.362-9.211 20.573-20.572 20.573H224.002v116.979c0 7.125-8.612 10.695-13.653 5.66L38.047 270.556c-8.046-8.036-8.047-21.076 0-29.112L210.349 69.36c5.041-5.035 13.653-1.464 13.653 5.66V192h171.437c11.362 0 20.572 9.211 20.572 20.573v86.854m32.001 0v-86.855c0-28.989-23.584-52.573-52.572-52.573H256.002V75.021c0-35.507-43.04-53.497-68.266-28.302L15.433 218.802c-20.576 20.55-20.58 53.842 0 74.396l172.303 172.083c25.122 25.091 68.266 7.351 68.266-28.302V352h139.437c28.989 0 52.573-23.584 52.573-52.573z" />
+  </symbol>
+  <symbol id="next-fill" fill="currentColor" viewBox="0 0 448 512">
+    <path
+      d="M32 212.573C32 201.211 41.211 192 52.572 192h171.437V75.021c0-7.125 8.612-10.695 13.653-5.66l172.303 172.083c8.046 8.036 8.047 21.076 0 29.112L237.662 442.64c-5.041 5.035-13.653 1.464-13.653-5.66V320H52.572C41.211 320 32 310.789 32 299.427v-86.854m-32 0v86.855C0 328.416 23.584 352 52.572 352h139.437v84.979c0 35.507 43.04 53.497 68.266 28.302l172.303-172.083c20.576-20.55 20.58-53.842 0-74.396L260.276 46.719c-25.122-25.091-68.266-7.351-68.266 28.302V160H52.572C23.584 160 0 183.584 0 212.573z" />
+  </symbol>
+  <symbol id="last-fill" fill="currentColor" viewBox="0 0 448 512">
+    <path
+      d="M32 217.1c0-8.8 7.2-16 16-16h144v-93.9c0-7.1 8.6-10.7 13.6-5.7l143.5 143.1c6.3 6.3 6.3 16.4 0 22.7L205.6 410.4c-5 5-13.6 1.5-13.6-5.7v-93.9H48c-8.8 0-16-7.2-16-16v-77.7m-32 0v77.7c0 26.5 21.5 48 48 48h112v61.9c0 35.5 43 53.5 68.2 28.3l143.6-143c18.8-18.8 18.8-49.2 0-68L228.2 78.9c-25.1-25.1-68.2-7.3-68.2 28.3v61.9H48c-26.5 0-48 21.6-48 48zM436 64h-8c-6.6 0-12 5.4-12 12v360c0 6.6 5.4 12 12 12h8c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12z" />
+  </symbol>
+</svg>
+<nav aria-label="Page navigation" [hidden]="numeroTotalDePaginas() === 0">
+  <ul class="pagination justify-content-end">
+    <li class="page-item" [class.disabled]="paginaActual() === 0" aria-label="First">
+      <button type="button" class="page-link" (click)="pageChange.emit(0)">
+        <svg class="img-fluid" style="max-width: 1em; max-height: 1em;" role="img" aria-label="first">
+          <use xlink:href="#first-fill" />
+        </svg>
+      </button>
+    </li>
+    @if(paginaActual() > 0) {
+    <li class="page-item" aria-label="Previous">
+      <button type="button" class="page-link" (click)="pageChange.emit(paginaActual()-1)">
+        <svg class="img-fluid" style="max-width: 1em; max-height: 1em;" role="img" aria-label="previous">
+          <use xlink:href="#previous-fill" />
+        </svg>
+      </button>
+    </li>
+    }
+    @for (pag of paginas(); track pag) {
+    @if(pag < 0) { <li class="page-item disabled" aria-label="Elipsis">
+      <input type="button" class="page-link" value="&hellip;">
+      </li>
+      } @else {
+      <li class="page-item" [class.active]="paginaActual() === pag">
+        <input type="button" class="page-link" value="{{pag + 1}}" (click)="pageChange.emit(pag)">
+      </li>
+      }
+      }
+      @if(paginaActual() < numeroTotalDePaginas() - 1) { <li class="page-item" aria-label="Next">
+        <button type="button" class="page-link" (click)="pageChange.emit(paginaActual()+1)">
+          <svg class="img-fluid" style="max-width: 1em; max-height: 1em;" role="img" aria-label="next">
+            <use xlink:href="#next-fill" />
+          </svg>
+        </button>
+        </li>
+        }
+        <li class="page-item" [class.disabled]="paginaActual() === numeroTotalDePaginas() - 1" aria-label="Last">
+          <button type="button" class="page-link" (click)="pageChange.emit(numeroTotalDePaginas()-1)">
+            <svg class="img-fluid" style="max-width: 1em; max-height: 1em;" role="img" aria-label="last">
+              <use xlink:href="#last-fill" />
+            </svg>
+          </button>
+        </li>
+  </ul>
+</nav>

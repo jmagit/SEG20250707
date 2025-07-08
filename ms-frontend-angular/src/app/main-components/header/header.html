@@ -1,0 +1,54 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/" tabindex="0"><img class="rounded" src="images/logo.png"
+          alt="Logotipo corporativo" height="60"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarDark"
+        aria-controls="offcanvasNavbarDark" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end text-bg-light" tabindex="-1" id="offcanvasNavbarDark"
+        aria-labelledby="offcanvasNavbarDarkLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">Menu</h5>
+          <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            @for(item of menu(); track $index) {
+            @if(item.visible && item.children) {
+            <li class="nav-item dropdown btn-group text-center">
+              @if(item.path) {
+              <a class="nav-link" [routerLink]="item.path" role="button"><i [class]="item.icono"></i> {{item.texto}}</a>
+              <a class="nav-link ps-0 ms-0 ms-md-1 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent" role="button"><span class="visually-hidden">{{item.texto}}</span></a>
+              } @else {
+              <a class="nav-link dropdown-toggle text-center" [routerLink]="item.path" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false"><i [class]="item.icono"></i> {{item.texto}}</a>
+              }
+              <ul class="dropdown-menu">
+                @for(child of item.children; track child.path) {
+                  @if(child.visible) {
+                    @if(child.separado) {
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    }
+                    <li><a class="dropdown-item" data-bs-dismiss="offcanvas" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        [routerLink]="child.path"><i [class]="child.icono"></i> {{child.texto}}</a></li>
+                  }
+                }
+              </ul>
+            </li>
+            } @else if(item.visible && item.path) {
+            <li class="nav-item"><a class="nav-link text-center" data-bs-dismiss="offcanvas" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                [routerLink]="item.path"><i [class]="item.icono"></i> {{item.texto}}</a></li>
+            }
+            }
+          </ul>
+          <app-login />
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
