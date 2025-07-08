@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -27,6 +28,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
+	@Value("${jwt.key.public}")
+	private String SECRET;
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
@@ -40,9 +44,6 @@ public class WebSecurityConfig {
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
-
-	@Value("${jwt.key.public}")
-	private String SECRET;
 
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -80,12 +81,15 @@ public class WebSecurityConfig {
 //								response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
 							}
 						})
- 				 ).authorizeHttpRequests(requests -> requests
-                      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
-                      .requestMatchers("/idiomas/v1/**").hasRole("ADMINISTRADORES")
-                      .anyRequest().permitAll()
-                 )
+ 				 ).authorizeHttpRequests(getAuthorizeHttpRequests())
                 .build();
+	}
+
+	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getAuthorizeHttpRequests() {
+		return requests -> requests
+		      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
+		      .requestMatchers("/idiomas/v1/**").hasRole("ADMINISTRADORES")
+		      .anyRequest().permitAll();
 	}
 
 }
