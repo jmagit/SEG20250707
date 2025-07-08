@@ -246,6 +246,7 @@ public class FilmResource {
 	@Operation(summary = "Añadir una nueva pelicula")
 	@ApiResponse(responseCode = "201", description = "Pelicula añadida")
 	@ApiResponse(responseCode = "404", description = "Pelicula no encontrada")
+	@SecurityRequirement(name = "bearerAuth")
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@Transactional
@@ -259,6 +260,7 @@ public class FilmResource {
 	@Operation(summary = "Modificar una pelicula existente", description = "Los identificadores deben coincidir")
 	@ApiResponse(responseCode = "200", description = "Pelicula encontrada")
 	@ApiResponse(responseCode = "404", description = "Pelicula no encontrada")
+	@SecurityRequirement(name = "bearerAuth")
 //	@Transactional
 	@PutMapping(path = "/{id}")
 	public FilmEditDTO modify(
@@ -272,6 +274,7 @@ public class FilmResource {
 	@Operation(summary = "Borrar una pelicula existente")
 	@ApiResponse(responseCode = "204", description = "Pelicula borrada")
 	@ApiResponse(responseCode = "404", description = "Pelicula no encontrada")
+	@SecurityRequirement(name = "bearerAuth")
 	@DeleteMapping(path = "/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void delete(@Parameter(description = "Identificador de la pelicula", required = true) @PathVariable int id)

@@ -44,7 +44,6 @@ public class ActorResource {
 	}
 	
 	@GetMapping(path = "/v1")
-	@SecurityRequirement(name = "bearerAuth")
 	public List<?> getAll(@RequestParam(required = false, defaultValue = "largo") String modo) {
 		if("short".equals(modo))
 			return (List<?>) srv.getByProjection(Sort.by("firstName", "lastName"), ActorShort.class);
@@ -87,6 +86,7 @@ public class ActorResource {
 	
 	@DeleteMapping(path = "/v1/{id}/jubilacion")
 	@ResponseStatus(HttpStatus.ACCEPTED)
+	@SecurityRequirement(name = "bearerAuth")
 	public void jubilar(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if(item.isEmpty())
@@ -95,6 +95,7 @@ public class ActorResource {
 	}
 	
 	@PostMapping(path = { "/v1", "/v2" })
+	@SecurityRequirement(name = "bearerAuth")
 	public ResponseEntity<Object> create(@Valid @RequestBody ActorDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
 		var newItem = srv.add(ActorDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -104,6 +105,7 @@ public class ActorResource {
 
 	@PutMapping(path = { "/v1/{id}", "/v2/{id}" })
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@SecurityRequirement(name = "bearerAuth")
 	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item) throws NotFoundException, InvalidDataException, BadRequestException {
 		if(id != item.getActorId())
 			throw new BadRequestException("No coinciden los identificadores");
@@ -112,6 +114,7 @@ public class ActorResource {
 
 	@DeleteMapping(path = { "/v1/{id}", "/v2/{id}" })
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@SecurityRequirement(name = "bearerAuth")
 	public void delete(@PathVariable int id) {
 		srv.deleteById(id);
 	}

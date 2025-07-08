@@ -34,7 +34,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/idiomas/v1")
-@SecurityRequirement(name = "bearerAuth")
 public class LanguageResource {
 	@Autowired
 	private LanguageRepository dao;
@@ -76,6 +75,7 @@ public class LanguageResource {
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@JsonView(Language.Partial.class)
+	@SecurityRequirement(name = "bearerAuth")
 	public ResponseEntity<Object> add(@Valid @RequestBody Language item) throws Exception {
 		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
@@ -89,6 +89,7 @@ public class LanguageResource {
 
 	@PutMapping(path = "/{id}")
 	@JsonView(Language.Partial.class)
+	@SecurityRequirement(name = "bearerAuth")
 	public Language modify(@PathVariable int id, @Valid @RequestBody Language item) throws Exception {
 		if (item.getLanguageId() != id)
 			throw new BadRequestException("No coinciden los ID");
@@ -103,6 +104,7 @@ public class LanguageResource {
 	@DeleteMapping(path = "/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	@JsonView(Language.Partial.class)
+	@SecurityRequirement(name = "bearerAuth")
 	public void delete(@PathVariable int id) throws Exception {
 		dao.deleteById(id);
 	}

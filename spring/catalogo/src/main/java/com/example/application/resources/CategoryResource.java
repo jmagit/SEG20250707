@@ -28,6 +28,8 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.http.HttpStatus;
 
 @RestController
@@ -64,6 +66,7 @@ public class CategoryResource {
 	}
 	
 	@PostMapping
+	@SecurityRequirement(name = "bearerAuth")
 	public ResponseEntity<Object> create(@Valid @RequestBody Category item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
 		if(item == null)
 			throw new BadRequestException("Faltan los datos");
@@ -75,6 +78,7 @@ public class CategoryResource {
 	}
 
 	@PutMapping("/{id}")
+	@SecurityRequirement(name = "bearerAuth")
 	public Category update(@PathVariable int id, @Valid @RequestBody Category item) throws BadRequestException, NotFoundException, InvalidDataException {
 		if(item == null)
 			throw new BadRequestException("Faltan los datos");
@@ -85,6 +89,7 @@ public class CategoryResource {
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@SecurityRequirement(name = "bearerAuth")
 	public void delete(@PathVariable int id) {
 		srv.deleteById(id);
 	}

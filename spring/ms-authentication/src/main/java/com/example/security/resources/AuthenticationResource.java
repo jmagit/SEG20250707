@@ -122,7 +122,7 @@ public class AuthenticationResource {
 	private AuthToken getAuthToken(Usuario usr) {
 		return AuthToken.builder()
 				.success(true)
-				.tokenType("Bearer ")
+				.tokenType("Bearer")
 				.accessToken(getToken(usr))
 				.refreshToken(getRefreshToken(usr))
 				.name(usr.getNombre())

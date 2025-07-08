@@ -87,9 +87,15 @@ public class WebSecurityConfig {
 
 	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getAuthorizeHttpRequests() {
 		return requests -> requests
-		      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
-		      .requestMatchers("/idiomas/v1/**").hasRole("ADMINISTRADORES")
-		      .anyRequest().permitAll();
+			      .requestMatchers(HttpMethod.GET).permitAll()
+			      .anyRequest().hasRole("EMPLEADOS");
+//		return requests -> requests
+////		      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
+////		      .requestMatchers("/idiomas/v1/**").hasRole("EMPLEADOS")
+//		      .requestMatchers(HttpMethod.POST).hasRole("EMPLEADOS")
+//		      .requestMatchers(HttpMethod.PUT).hasRole("EMPLEADOS")
+//		      .requestMatchers(HttpMethod.DELETE).hasRole("EMPLEADOS")
+//		      .anyRequest().permitAll();
 	}
 
 }

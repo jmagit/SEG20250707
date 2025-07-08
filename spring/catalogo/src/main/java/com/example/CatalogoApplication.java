@@ -1,8 +1,9 @@
 package com.example;
 
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -46,7 +47,7 @@ import jakarta.transaction.Transactional;
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 @EnableFeignClients
 public class CatalogoApplication implements CommandLineRunner {
-	private final Logger log = Logger.getLogger(getClass().getName());
+	private final Log log = LogFactory.getLog(getClass());
 
 	public static void main(String[] args) {
 		SpringApplication.run(CatalogoApplication.class, args);
