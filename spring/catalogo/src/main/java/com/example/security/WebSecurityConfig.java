@@ -80,16 +80,10 @@ public class WebSecurityConfig {
 //								response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
 							}
 						})
- 				).authorizeHttpRequests(requests -> requests
-                    .requestMatchers(HttpMethod.GET, "/*.*", "/").permitAll()
-                    .requestMatchers("/error").permitAll()
-                    .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                    .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers("/login/**").permitAll()
-                    .requestMatchers("/signature/**").permitAll()
-                    .requestMatchers("/hmac/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/solo-admin").hasRole("ADMINISTRADORES")
-                    .anyRequest().authenticated()
+ 				 ).authorizeHttpRequests(requests -> requests
+                      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
+                      .requestMatchers("/idiomas/v1/**").hasRole("ADMINISTRADORES")
+                      .anyRequest().permitAll()
                  )
                 .build();
 	}
