@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor
 @Builder
 public class AuthToken implements Serializable {
+	@Builder.Default
 	private boolean success = false;
 	@JsonProperty("access_token")
     private String accessToken;

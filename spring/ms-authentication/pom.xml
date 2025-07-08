@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>ms.autentication</artifactId>
+	<artifactId>ms-authentication</artifactId>
 	<version>1.0.0</version>
-	<name>ms-autentication</name>
+	<name>ms-authentication</name>
 	<description>Demo de servidor de autenticación con JWT</description>
 	<properties>
 		<java.version>21</java.version>
@@ -95,7 +95,14 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
                     <image>
+                    	<name>${project.artifactId}:${project.version}</name>
                         <createdDate>now</createdDate>
                     </image>
                 </configuration>
@@ -103,18 +110,6 @@
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
