@@ -1,19 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace AuthenticationServer.Controllers;
 
-namespace AuthenticationServer.Controllers;
-
+using AuthenticationServer.Entities;
+using AuthenticationServer.Models;
+using AuthenticationServer.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
-using System.Text.Json.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [ApiController]
 [Route("[controller]")]
@@ -32,7 +29,7 @@ public class AuthController : ControllerBase {
     public AuthController(IConfiguration configuration) {
         _configuration = configuration;
         simetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Refresh"])); // Usamos la clave simétrica
-        simetricCredentials = new SigningCredentials(simetricKey, 
+        simetricCredentials = new SigningCredentials(simetricKey,
             SecurityAlgorithms.HmacSha256 // Especificamos el algoritmo HS256
             );
         asimetricCredentials = new SigningCredentials(
@@ -78,16 +75,6 @@ public class AuthController : ControllerBase {
     [HttpGet("signature")]
     public IActionResult PublicKey() {
         return Ok(KeyManager.ExportPublicKeyToPEM());
-    }
-
-    [HttpGet("auth")]
-    [Authorize]
-    public IActionResult Auth() {
-        var result = new {
-            username = User.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier)?.Value,
-            roles = User.Claims.Where(e => e.Type == ClaimTypes.Role).Select(e => e.Value).ToList()
-        };
-        return Ok(result);        
     }
 
     private AuthToken GenerateAuthToken(Usuario usr) {
@@ -141,47 +128,4 @@ public class AuthController : ControllerBase {
         return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
     }
 }
-public class LoginModel {
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
 
-public class AuthToken {
-    public bool Success { get; set; } = false;
-    [JsonPropertyName("token_type")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string TokenType { get; set; }
-    [JsonPropertyName("access_token")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string AccessToken { get; set; }
-    [JsonPropertyName("refresh_token")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string RefreshToken { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string Name { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public List<string> Roles { get; set; }
-    [JsonPropertyName("expires_in")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public int ExpiresIn { get; set; }
-}
-
-public class RefreshToken {
-    public string Token { get; set; }
-}
-
-public class Usuario {
-    public string IdUsuario { get; set; }
-    public string Password { get; set; }
-    public string Nombre { get; set; }
-    public List<string> Roles { get; set; } = new List<string>();
-    public bool Active { get; set; } = true;
-
-    public Usuario(string idUsuario, string password, string nombre, List<string> roles, bool active = true) {
-        IdUsuario = idUsuario;
-        Password = password;
-        Nombre = nombre;
-        Roles = roles;
-        Active = active;
-    }
-}

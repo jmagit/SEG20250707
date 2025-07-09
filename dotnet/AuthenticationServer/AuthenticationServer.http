@@ -1,5 +1,6 @@
 @AuthenticationServer_HostAddress = http://localhost:5039
-@usr = "emp@example.com"
+@usr = "adm@example.com"
+@token = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1AZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJVc3VhcmlvcyIsIkFkbWluaXN0cmFkb3JlcyJdLCJuYmYiOjE3NTIwNjM5NTAsImV4cCI6MTc1MjA2NDI1MCwiaWF0IjoxNzUyMDYzOTUwLCJpc3MiOiJNaWNyb3NlcnZpY2lvc0pXVCIsImF1ZCI6ImF1dGhvcml6YXRpb24ifQ.JA8mfbFollUSIykl72PHcaFrX7sPMhf8FZR-da4K3-ecUMgXR39yjB1t-LiF0g5x7mConMBhCPOdZwgLTz9on82EASDxxPBj7JmcWG3nWJ1Qs-U-aQksyAqHMjvaXOp2p9xapGUbQdowKuDxfOG5nJz7WpXa6hVlSi_1lbcfIgzxy44DjlRz2wRQE8Wfq-B1lZS-eh2ibkDwvgDZc-4IUL4uYntP7dR_HhioT-C-B4b6AuKAseCtaDOPtBq97SkCFMOM49kGk2eV7wyDZfUtXzBE8rBpS7qkpzhZCilnzkXgjkUrqXkQMi6JannNr3ZOKvAQunHuBWvlGjiLRKitGw
 
 ###
 
@@ -13,8 +14,23 @@ Content-Type: application/json
 
 ###
 
-GET {{AuthenticationServer_HostAddress}}/auth/auth
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbXBAZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJVc3VhcmlvcyIsIkVtcGxlYWRvcyJdLCJuYmYiOjE3NTE3NTMxMDQsImV4cCI6MTc1MTc1MzQwNCwiaWF0IjoxNzUxNzUzMTA0LCJpc3MiOiJNaWNyb3NlcnZpY2lvc0pXVCIsImF1ZCI6ImF1dGhvcml6YXRpb24ifQ.noKgTgL0BjzlPx7M44rbIyeay8z9Er3ZCnrEIYOlS09jhvHbDmxitOsLLJN3pF4Sp5r3TJfn3Z04ooU5Fu1Mcw1rkCr78tSy4-yIXqtHtl2VNxteu8tDinYK7tVSmH_76fojb0vekilKpD9GVyqjfpbSDMmAAXcoG7NHTjZK3yHJlBk7QqycJvDR94k-W20EQM5T80B9E-ZEPXtI2AMp-sxvNyoT-NxBNJTul0MMX2HANc26VyzV01wl6mk68tJMwpOtVpeCbQuElZDJ0aMPyPFsiEZCQlUFI8iW09nLDKBKEBlpH-PUMsHGcB1PY1VgN1SeY4TcvYv09DlQ27RryA
+GET {{AuthenticationServer_HostAddress}}/Test/status
+Authorization: Bearer {{token}}
+
+###
+
+GET {{AuthenticationServer_HostAddress}}/Test/solo-autenticados
+Authorization: Bearer {{token}}
+
+###
+
+GET {{AuthenticationServer_HostAddress}}/Test/solo-administradores
+Authorization: Bearer {{token}}
+
+###
+
+GET {{AuthenticationServer_HostAddress}}/Test/solo-empleados
+Authorization: Bearer {{token}}
 
 ###
 

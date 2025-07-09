@@ -1,11 +1,11 @@
-﻿namespace AuthenticationServer.Controllers;
+﻿namespace AuthenticationServer.Utils;
 
 using Microsoft.IdentityModel.Tokens; // Necesario para RsaSecurityKey
 using System.Security.Cryptography;
 using System.Text;
 
 public static class KeyManager {
-    // Las claves pública y privada deben ser accesibles globalmente o inyectadas vía DI.
+    // Las claves pública y privada deben ser accesibles globalmente o de inyección de dependencias.
     public static RSA RsaPrivateKey { get; private set; }
     public static RSA RsaPublicKey { get; private set; }
 

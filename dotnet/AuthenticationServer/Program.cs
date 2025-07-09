@@ -1,4 +1,4 @@
-using AuthenticationServer.Controllers;
+using AuthenticationServer.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +58,6 @@ namespace AuthenticationServer {
                     options.Events = new JwtBearerEvents {
                         OnChallenge = async context => {
                             // Si la autenticación falla, puedes personalizar el encabezado WWW-Authenticate
-                            //return Task.CompletedTask;
                             context.HandleResponse();
                             context.Response.Headers["WWW-Authenticate"] = "Bearer realm=\"MicroserviciosJWT\"";
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -101,7 +100,7 @@ namespace AuthenticationServer {
                     };
 
                 });
-            builder.Services.AddAuthorization(); // Habilita la autorización
+            builder.Services.AddAuthorization(); // Habilita la autorización para las pruebas
 
             var app = builder.Build();
 
@@ -125,6 +124,7 @@ namespace AuthenticationServer {
             app.Run();
         }
     }
+    // Agregar la cabecera info al documento OpenApi
     internal sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider) : IOpenApiDocumentTransformer {
         public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken) {
             var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
