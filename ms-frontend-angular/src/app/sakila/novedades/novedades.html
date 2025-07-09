@@ -14,21 +14,21 @@
 @if (novedades?.actors?.length > 0) {
   <h2 class="display-4">Actores</h2>
   <div>@for (item of novedades?.actors; track item.id) {
-    <span class="badge text-bg-info me-1"
-    >{{item.nombre}} {{item.apellidos}}</span>
+    <h3 class="d-inline-block"><span class="badge text-bg-info me-1"
+    >{{item.nombre}} {{item.apellidos}}</span></h3>
   }</div>
 }
 @if (novedades?.categories?.length > 0) {
   <h2 class="display-4">Categorias</h2>
   <div>@for (item of novedades?.categories; track item.id) {
-    <span class="badge text-bg-info me-1"
-    >{{item.categoria}}</span>
+    <h3 class="d-inline-block"><span class="badge text-bg-info me-1"
+    >{{item.categoria}}</span></h3>
   }</div>
 }
 @if (novedades?.languages?.length > 0) {
   <h2 class="display-4">Idioma</h2>
   <div>@for (item of novedades?.languages; track item.id) {
-    <span class="badge text-bg-info me-1"
-    >{{item.idioma}}</span>
+    <h3 class="d-inline-block" ><span class="badge text-bg-info me-1"
+    >{{item.idioma}}</span></h3>
   }</div>
 }
