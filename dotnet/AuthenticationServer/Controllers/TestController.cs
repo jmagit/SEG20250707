@@ -10,7 +10,7 @@ public class TestController : ControllerBase {
 
     [HttpGet("status")]
     public IActionResult Status() {
-        if(!User.Identity.IsAuthenticated)
+        if(!User.Identity?.IsAuthenticated ?? false)
             return Ok("No autenticado");
         var result = new {
             username = User.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier)?.Value,

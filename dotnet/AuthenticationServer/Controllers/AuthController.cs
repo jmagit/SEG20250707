@@ -2,8 +2,7 @@
 
 using AuthenticationServer.Entities;
 using AuthenticationServer.Models;
-using AuthenticationServer.Utils;
-using Microsoft.AspNetCore.Authorization;
+using AuthenticationServer.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -28,7 +27,7 @@ public class AuthController : ControllerBase {
 
     public AuthController(IConfiguration configuration) {
         _configuration = configuration;
-        simetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Refresh"])); // Usamos la clave simétrica
+        simetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Refresh"] ?? "")); // Usamos la clave simétrica
         simetricCredentials = new SigningCredentials(simetricKey,
             SecurityAlgorithms.HmacSha256 // Especificamos el algoritmo HS256
             );
@@ -61,7 +60,7 @@ public class AuthController : ControllerBase {
         try {
             var principal = handler.ValidateToken(model.Token, tokenValidationParameters, out var validatedToken);
 
-            if(!principal.Identity.IsAuthenticated)
+            if(!principal.Identity?.IsAuthenticated ?? false)
                 return Forbid();
             var item = db.Find(u => u.IdUsuario == principal.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier)?.Value);
             if(item == null || !item.Active)
