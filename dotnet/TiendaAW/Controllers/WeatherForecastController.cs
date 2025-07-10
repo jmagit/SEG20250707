@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TiendaAW.Models;
 
 namespace TiendaAW.Controllers {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Administradores,Empleados")]
     public class WeatherForecastController : ControllerBase {
         private static readonly string[] Summaries = new[]
         {

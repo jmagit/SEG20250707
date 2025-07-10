@@ -68,16 +68,43 @@ namespace TiendaAW.Controllers {
                 .ToList();
         }
 
+        // POST: api/Categorias
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        [Authorize(Roles = "Empleados")]
+        public async Task<ActionResult<ProductCategory>> PostProductCategory(ProductCategory productCategory) {
+            _context.ProductCategories.Add(productCategory);
+            try {
+                await _context.SaveChangesAsync();
+            } catch(Exception ex) {
+                return Problem(ex.InnerException?.Message ?? ex.Message, statusCode: 400);
+            }
+
+            return CreatedAtAction("GetProductCategory", new { id = productCategory.ProductCategoryId }, productCategory);
+        }
+
         // PUT: api/Categorias/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Empleados")]
         public async Task<IActionResult> PutProductCategory(int id, ProductCategory productCategory) {
             if(id != productCategory.ProductCategoryId) {
-                return BadRequest();
+                return BadRequest(new ProblemDetails() { Title = "No coinciden los identificadores" });
             }
 
-            productCategory.ModifiedDate = DateTime.UtcNow;
-            _context.Entry(productCategory).State = EntityState.Modified;
+            var item = await _context.ProductCategories.FindAsync(id);
+
+            if(item == null) {
+                return NotFound();
+            }
+            if(!item.ParentProductCategoryId.HasValue && productCategory.ParentProductCategoryId.HasValue &&
+                _context.ProductCategories.Any(e => e.ParentProductCategoryId == item.ProductCategoryId)) {
+                return BadRequest(new ProblemDetails() { Title = "No se puede cambiar la jerarquía" });
+            }
+            item.Name = productCategory.Name;
+            item.ParentProductCategoryId = productCategory.ParentProductCategoryId;
+            item.ModifiedDate = DateTime.UtcNow;
+            //_context.Entry(productCategory).State = EntityState.Modified;
 
             try {
                 await _context.SaveChangesAsync();
@@ -94,22 +121,9 @@ namespace TiendaAW.Controllers {
             return NoContent();
         }
 
-        // POST: api/Categorias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ProductCategory>> PostProductCategory(ProductCategory productCategory) {
-            _context.ProductCategories.Add(productCategory);
-            try {
-                await _context.SaveChangesAsync();
-            } catch(Exception ex) {
-                return Problem(ex.InnerException?.Message ?? ex.Message, statusCode: 400);
-            }
-
-            return CreatedAtAction("GetProductCategory", new { id = productCategory.ProductCategoryId }, productCategory);
-        }
-
         // DELETE: api/Categorias/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Empleados")]
         public async Task<IActionResult> DeleteProductCategory(int id) {
             var productCategory = await _context.ProductCategories.FindAsync(id);
             if(productCategory == null) {

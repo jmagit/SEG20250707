@@ -11,8 +11,10 @@ namespace TiendaAW {
         public static void Main(string[] args) {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<AdventureWorksContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksConnection"))
+            builder.Services.AddDbContext<AdventureWorksContext>(options => {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksConnection"));
+                options.EnableDetailedErrors(true);
+            }
                 );
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();

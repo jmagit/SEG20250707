@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TiendaAW.Data;
-using TiendaAW.Entities;
-using TiendaAW.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using TiendaAW.Data;
+using TiendaAW.Entities;
+using TiendaAW.Models;
 
 namespace TiendaAW.Controllers {
     [Route("[controller]")]
@@ -92,6 +93,7 @@ namespace TiendaAW.Controllers {
 
         // POST: api/Products
         [HttpPost]
+        [Authorize(Roles = "Empleados")]
         public async Task<ActionResult<Product>> PostProduct(ProductEdit product) {
             var item = product.merge(new Product());
             _context.Products.Add(item);
@@ -107,6 +109,7 @@ namespace TiendaAW.Controllers {
         // PUT: api/Products/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Authorize(Roles = "Empleados")]
         public async Task<IActionResult> PutProduct(int id, ProductEdit product) {
             if(id != product.ProductId) {
                 return BadRequest();
@@ -134,6 +137,7 @@ namespace TiendaAW.Controllers {
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Empleados")]
         public async Task<IActionResult> DeleteProduct(int id) {
             var product = await _context.Products.FindAsync(id);
             if(product == null) {
