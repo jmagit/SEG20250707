@@ -36,5 +36,15 @@ public class TestController : ControllerBase {
     public IActionResult SoloEmpleados() {
         return Ok($"Usuario es el empleado {User.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier)?.Value}.");
     }
+
+    [HttpGet("password/encode")]
+    public IActionResult pwdEncode(string password) {
+        return Ok(BCrypt.Net.BCrypt.HashPassword(password));
+    }
+
+    [HttpGet("password/verify")]
+    public IActionResult pwdVerify(string password, string stored) {
+        return Ok(BCrypt.Net.BCrypt.Verify(password, stored) ? "OK" : "KO");
+    }
 }
 

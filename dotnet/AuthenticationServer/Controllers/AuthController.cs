@@ -17,9 +17,10 @@ public class AuthController : ControllerBase {
     public static int EXPIRES_IN_MINUTES = 5;
     private readonly IConfiguration _configuration;
     private readonly List<Usuario> db = new List<Usuario> {
-        new Usuario("adm@example.com", "P@$$w0rd", "Administrador", new List<string> { "Usuarios", "Administradores" }),
-        new Usuario("usr@example.com", "P@$$w0rd", "Usuario registrado", new List<string> { "Usuarios" }),
-        new Usuario("emp@example.com", "P@$$w0rd", "Empleado", new List<string> { "Usuarios", "Empleados" }),
+        // Contraseña: P@$$w0rd
+        new Usuario("adm@example.com", "$2a$10$HyqduzZnjWC0ittWFTNWnOaagOwLXusQelfQ4TBwjXx1bMm8.sMDe", "Administrador", new List<string> { "Usuarios", "Administradores" }),
+        new Usuario("usr@example.com", "$2a$10$wmj8GP0PlEJkuezu6zZhNu7F3O7l7G1a2nTBdy231oDUT4h67.Koq", "Usuario registrado", new List<string> { "Usuarios" }),
+        new Usuario("emp@example.com", "$2a$10$uk8teFJl3.e8Glh2rAYMb.4H8aRD9/.xUgzeog/wvgGIT6mBGGTra", "Empleado", new List<string> { "Usuarios", "Empleados" }),
     };
     private readonly SymmetricSecurityKey simetricKey;
     private readonly SigningCredentials simetricCredentials;
@@ -40,7 +41,7 @@ public class AuthController : ControllerBase {
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginModel model) {
         var item = db.Find(u => u.IdUsuario == model.Username);
-        if(item == null || !item.Active || item.Password != model.Password)
+        if(item == null || !item.Active || !BCrypt.Net.BCrypt.Verify(model.Password, item.Password))
             return Ok(new AuthToken());
         return Ok(GenerateAuthToken(item));
     }
