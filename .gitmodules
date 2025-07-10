@@ -1,0 +1,3 @@
+[submodule "MOCKWebServer"]
+	path = MOCKWebServer
+	url = git@github.com:jmagit/MOCKWebServer.git
