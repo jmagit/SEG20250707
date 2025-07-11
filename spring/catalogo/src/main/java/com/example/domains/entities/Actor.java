@@ -55,6 +55,7 @@ public class Actor extends AbstractEntity<Actor> implements Serializable {
 
 	@Column(name="last_name", nullable=false, length=45)
 	@Size(max=45, min=2)
+	@NotBlank
 //	@Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas")
 	private String lastName;
 

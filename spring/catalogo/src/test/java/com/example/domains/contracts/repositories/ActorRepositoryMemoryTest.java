@@ -19,7 +19,7 @@ import com.example.tests.core.UnitTest;
 @DataJpaTest
 @Sql(scripts = {"classpath:catalogo_schema.sql"}, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 @UnitTest
-class ActorRepositoryTest {
+class ActorRepositoryMemoryTest {
 	@Autowired
 	private TestEntityManager em;
 
