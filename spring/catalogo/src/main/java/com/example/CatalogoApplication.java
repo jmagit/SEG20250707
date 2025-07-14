@@ -17,8 +17,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode;
 
-import com.example.domains.event.DomainEvent;
-import com.example.domains.event.EntityChangedEvent;
+import com.example.domain.event.DomainEvent;
+import com.example.domain.event.EntityChangedEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

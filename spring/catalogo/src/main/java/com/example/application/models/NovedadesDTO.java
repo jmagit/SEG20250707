@@ -2,11 +2,11 @@ package com.example.application.models;
 
 import java.util.List;
 
-import com.example.domains.entities.Category;
-import com.example.domains.entities.Film;
-import com.example.domains.entities.Language;
-import com.example.domains.entities.models.ActorDTO;
-import com.example.domains.entities.models.FilmShortDTO;
+import com.example.domain.entities.Category;
+import com.example.domain.entities.Film;
+import com.example.domain.entities.Language;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.FilmShortDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

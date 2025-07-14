@@ -6,14 +6,14 @@ import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.application.contracts.CatalogoService;
 import com.example.application.models.NovedadesDTO;
-import com.example.domains.contracts.services.ActorService;
-import com.example.domains.contracts.services.CategoryService;
-import com.example.domains.contracts.services.FilmService;
-import com.example.domains.contracts.services.LanguageService;
-import com.example.domains.entities.models.ActorDTO;
-import com.example.domains.entities.models.FilmShortDTO;
+import com.example.contracts.application.CatalogoService;
+import com.example.contracts.domain.services.ActorService;
+import com.example.contracts.domain.services.CategoryService;
+import com.example.contracts.domain.services.FilmService;
+import com.example.contracts.domain.services.LanguageService;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.FilmShortDTO;
 
 @Service
 public class CatalogoServiceImpl implements CatalogoService {

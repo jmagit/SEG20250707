@@ -29,10 +29,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.domains.contracts.services.ActorService;
-import com.example.domains.entities.Actor;
-import com.example.domains.entities.models.ActorDTO;
-import com.example.domains.entities.models.ActorShort;
+import com.example.contracts.domain.services.ActorService;
+import com.example.domain.entities.Actor;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorShort;
+import com.example.presentation.resources.ActorResource;
 import com.example.security.WebSecurityConfig;
 import com.example.tests.core.IntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;

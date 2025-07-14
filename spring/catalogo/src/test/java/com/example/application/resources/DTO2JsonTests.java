@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 
-import com.example.domains.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorDTO;
 
 @JsonTest
 public class DTO2JsonTests {
