@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.example.core.domain.entities.AbstractEntity;
 import com.example.core.domain.validations.NIF;
 
 import jakarta.validation.constraints.NotBlank;

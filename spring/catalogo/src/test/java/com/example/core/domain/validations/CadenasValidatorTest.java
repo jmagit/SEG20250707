@@ -13,9 +13,8 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.example.core.domain.entities.AbstractEntity;
-import com.example.core.domain.validations.CadenasValidator;
-import com.example.core.domain.validations.NIF;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 class CadenasValidatorTest {
@@ -46,6 +45,7 @@ class CadenasValidatorTest {
 	@DisplayName("Pruebas de la anotación @NIF")
 	class Anotacion {
 		@Value
+		@EqualsAndHashCode(callSuper = false)
 		class Dummy extends AbstractEntity<Dummy> {
 			@NIF
 			String nif;			

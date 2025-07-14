@@ -1,4 +1,4 @@
-package com.example.application.resources;
+package com.example.presentation.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

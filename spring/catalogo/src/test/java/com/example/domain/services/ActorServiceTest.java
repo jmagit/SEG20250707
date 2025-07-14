@@ -26,7 +26,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import com.example.contracts.domain.repositories.ActorRepository;
-import com.example.contracts.domain.services.ActorService;
 import com.example.domain.entities.Actor;
 import com.example.tests.core.UnitTest;
 
