@@ -42,72 +42,82 @@ public class ActorResource {
 	public ActorResource(ActorService srv) {
 		this.srv = srv;
 	}
-	
+
 	@GetMapping(path = "/v1")
 	public List<?> getAll(@RequestParam(required = false, defaultValue = "largo") String modo) {
-		if("short".equals(modo))
+		if ("short".equals(modo))
 			return (List<?>) srv.getByProjection(Sort.by("firstName", "lastName"), ActorShort.class);
 		else
 			return (List<?>) srv.getByProjection(Sort.by("firstName", "lastName"), ActorDTO.class); // srv.getAll();;
 	}
-	
+
 	@GetMapping(path = "/v2")
 	public List<ActorDTO> getAllv2(@RequestParam(required = false) String sort) {
 		if (sort != null)
 			return (List<ActorDTO>) srv.getByProjection(Sort.by(sort), ActorDTO.class);
 		return srv.getByProjection(ActorDTO.class);
 	}
-	
+
 	@GetMapping(path = { "/v1", "/v2" }, params = "page")
 	public PagedModel<ActorShort> getAll(@ParameterObject Pageable page) {
 		return new PagedModel<ActorShort>(srv.getByProjection(page, ActorShort.class));
 	}
-	
+
 	@GetMapping(path = { "/v1/{id}", "/v2/{id}" })
 	public ActorDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
-		if(item.isEmpty())
+		if (item.isEmpty())
 			throw new NotFoundException();
 		return ActorDTO.from(item.get());
 	}
-	
-	record Peli(int id, String titulo) {}
-	
-	@GetMapping(path = {"/v1/{id}/pelis","/v2/{id}/pelis"})
-	@Transactional
-	public List<Peli> getPelis(@PathVariable int id) throws NotFoundException {
-		var item = srv.getOne(id);
-		if(item.isEmpty())
-			throw new NotFoundException();
-		return item.get().getFilmActors().stream()
-				.map(o -> new Peli(o.getFilm().getFilmId(), o.getFilm().getTitle()))
-				.toList();
+
+	record Filmografia(int id, String titulo, Short año) {
 	}
-	
+
+	@GetMapping(path = { "/v1/{id}/filmografia", "/v2/{id}/filmografia" })
+	@Transactional
+	public List<Filmografia> getPelis(@PathVariable int id) throws NotFoundException {
+		var item = srv.getOne(id);
+		if (item.isEmpty())
+			throw new NotFoundException();
+		return item.get().getFilmActors().stream().map(
+				o -> new Filmografia(o.getFilm().getFilmId(), o.getFilm().getTitle(), o.getFilm().getReleaseYear()))
+				.sorted((a, b) -> {
+					if (a.año != null) {
+						int cmp = a.año.compareTo(b.año);
+						if (cmp != 0)
+							return cmp;
+					}
+					return a.titulo.compareTo(b.titulo);
+				}).toList();
+	}
+
 	@DeleteMapping(path = "/v1/{id}/jubilacion")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@SecurityRequirement(name = "bearerAuth")
 	public void jubilar(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
-		if(item.isEmpty())
+		if (item.isEmpty())
 			throw new NotFoundException();
 		item.get().jubilate();
 	}
-	
+
 	@PostMapping(path = { "/v1", "/v2" })
 	@SecurityRequirement(name = "bearerAuth")
-	public ResponseEntity<Object> create(@Valid @RequestBody ActorDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
+	public ResponseEntity<Object> create(@Valid @RequestBody ActorDTO item)
+			throws BadRequestException, DuplicateKeyException, InvalidDataException {
 		var newItem = srv.add(ActorDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-			.buildAndExpand(newItem.getActorId()).toUri();
+				.buildAndExpand(newItem.getActorId()).toUri();
 		return ResponseEntity.created(location).build();
 	}
 
 	@PutMapping(path = { "/v1/{id}", "/v2/{id}" })
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@SecurityRequirement(name = "bearerAuth")
-	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item) throws NotFoundException, InvalidDataException, BadRequestException {
-		if(id != item.getActorId())
+	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item)
+			throws NotFoundException, InvalidDataException, BadRequestException {
+		if (id != item.getActorId())
 			throw new BadRequestException("No coinciden los identificadores");
 		srv.modify(ActorDTO.from(item));
 	}

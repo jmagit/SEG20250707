@@ -26,7 +26,7 @@ import com.example.core.domain.exceptions.DuplicateKeyException;
 import com.example.core.domain.exceptions.InvalidDataException;
 import com.example.core.domain.exceptions.NotFoundException;
 import com.example.domain.entities.Category;
-import com.example.domain.entities.models.FilmShortDTO;
+import com.example.domain.entities.models.FilmShort;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -54,13 +54,13 @@ public class CategoryResource {
 	
 	@GetMapping(path = "/{id}/peliculas")
 	@Transactional
-	public List<FilmShortDTO> getPelis(@PathVariable int id) throws NotFoundException {
+	public List<FilmShort> getPelis(@PathVariable int id) throws NotFoundException {
 		var Category = srv.getOne(id);
 		if(Category.isEmpty())
 			throw new NotFoundException();
 		else {
-			return (List<FilmShortDTO>) Category.get().getFilmCategories().stream()
-					.map(item -> FilmShortDTO.from(item.getFilm()))
+			return (List<FilmShort>) Category.get().getFilmCategories().stream()
+					.map(item -> FilmShort.from(item.getFilm()))
 					.collect(Collectors.toList());
 		}
 	}

@@ -31,6 +31,20 @@ public class WebSecurityConfig {
 	@Value("${jwt.key.public}")
 	private String SECRET;
 
+	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getAuthorizeHttpRequests() {
+		return requests -> requests
+				.anyRequest().permitAll();
+//			      .requestMatchers(HttpMethod.GET).permitAll()
+//			      .anyRequest().hasRole("EMPLEADOS");
+//		return requests -> requests
+////		      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
+////		      .requestMatchers("/idiomas/v1/**").hasRole("EMPLEADOS")
+//		      .requestMatchers(HttpMethod.POST).hasRole("EMPLEADOS")
+//		      .requestMatchers(HttpMethod.PUT).hasRole("EMPLEADOS")
+//		      .requestMatchers(HttpMethod.DELETE).hasRole("EMPLEADOS")
+//		      .anyRequest().permitAll();
+	}
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
@@ -83,19 +97,6 @@ public class WebSecurityConfig {
 						})
  				 ).authorizeHttpRequests(getAuthorizeHttpRequests())
                 .build();
-	}
-
-	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getAuthorizeHttpRequests() {
-		return requests -> requests
-			      .requestMatchers(HttpMethod.GET).permitAll()
-			      .anyRequest().hasRole("EMPLEADOS");
-//		return requests -> requests
-////		      .requestMatchers(HttpMethod.GET, "/idiomas/v1/**").permitAll()
-////		      .requestMatchers("/idiomas/v1/**").hasRole("EMPLEADOS")
-//		      .requestMatchers(HttpMethod.POST).hasRole("EMPLEADOS")
-//		      .requestMatchers(HttpMethod.PUT).hasRole("EMPLEADOS")
-//		      .requestMatchers(HttpMethod.DELETE).hasRole("EMPLEADOS")
-//		      .anyRequest().permitAll();
 	}
 
 }

@@ -24,13 +24,13 @@ public class EntityChangedEventAspect {
 	private void publish(@NonNull EntityChangedEvent event) {
 		publisher.publishEvent(event);
 	}
-	@Pointcut("execution(* com.example.domain.contracts.repositories..*.*(..))")
+	@Pointcut("execution(* com.example.contracts.domain.repositories..*.*(..))")
 	public void repositorios() {}
 
 	@Pointcut("execution(* com.example.domain.services..*.*(..))")
 	public void servicios() {}
 	
-	@Pointcut("this(com.example.domain.core.contracts.services.DomainService)") 
+	@Pointcut("this(com.example.core.contracts.domain.services.DomainService)") 
 	public void domainService() {}
 
 	@Pointcut("execution(* *.add(..))")
@@ -49,21 +49,21 @@ public class EntityChangedEventAspect {
 	public void add(JoinPoint jp, Object retVal) {
 		var event = EntityChangedEvent.asAdd(retVal);
 		publish(event);
-		log.warn("Raise " + event);
+		log.warn("AOT: Raise " + event);
 	}
 	
 	@AfterReturning(pointcut="domainService() && metodosModify()", returning="retVal")
 	public void modify(JoinPoint jp, Object retVal) {
 		var event = EntityChangedEvent.asModify(retVal);
 		publish(event);
-		log.warn("Raise " + event);
+		log.warn("AOT: Raise " + event);
 	}
 	
 	@After("domainService() && metodosDelete()")
 	public void delete(JoinPoint jp, Object retVal) {
 		var event = EntityChangedEvent.asRemove(jp.getArgs()[0]);
 		publish(event);
-		log.warn("Raise " + event);
+		log.warn("AOT: Raise " + event);
 	}
 
 	@After("(domainService() && metodosDeleteById()) || @annotation(com.example.domain.event.EmitEntityDeleted)")

@@ -10,7 +10,7 @@ public class CommonPointcuts {
 	@Pointcut("execution(public * com.example..*.*(..))")
 	public void cualquierMetodoPublico() {}
 
-	@Pointcut("this(com.example.domain.contracts.repositories)")
+	@Pointcut("this(com.example.contracts.domain.repositories)")
 	public void repositorios() {}
 
 	@Pointcut("this(com.example.domain.services)") // execution(* com.example.domain.services..*.modify(..))

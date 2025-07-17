@@ -3,7 +3,8 @@ package com.example.domain.services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import com.example.contracts.domain.repositories.ActorRepository;
+import com.example.contracts.domain.services.ActorService;
 import com.example.domain.entities.Actor;
 import com.example.tests.core.UnitTest;
 
@@ -50,7 +52,7 @@ class ActorServiceTest {
 	ActorRepository dao;
 	
 	@Autowired
-	ActorServiceImpl srv;
+	ActorService srv;
 	
 	@BeforeEach
 	void setUp() throws Exception {

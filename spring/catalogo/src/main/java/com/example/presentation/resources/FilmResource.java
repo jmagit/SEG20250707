@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.contracts.domain.services.FilmService;
@@ -38,11 +39,12 @@ import com.example.domain.entities.Category;
 import com.example.domain.entities.Film;
 import com.example.domain.entities.Film.Rating;
 import com.example.domain.entities.models.ActorDTO;
-import com.example.domain.entities.models.FilmDetailsDTO;
-import com.example.domain.entities.models.FilmEditDTO;
-import com.example.domain.entities.models.FilmShortDTO;
+import com.example.domain.entities.models.FilmDetails;
+import com.example.domain.entities.models.FilmEdit;
+import com.example.domain.entities.models.FilmShort;
 import com.example.infraestructure.proxies.MeGustaProxy;
 
+import feign.FeignException;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,8 +67,8 @@ public class FilmResource {
 
 	@Hidden
 	@GetMapping(params = "page")
-	public PagedModel<FilmShortDTO> getAll(Pageable pageable, @RequestParam(defaultValue = "short") String mode) {
-		return new PagedModel<FilmShortDTO>(srv.getByProjection(pageable, FilmShortDTO.class));
+	public PagedModel<FilmShort> getAll(Pageable pageable, @RequestParam(defaultValue = "short") String mode) {
+		return new PagedModel<FilmShort>(srv.getByProjection(pageable, FilmShort.class));
 	}
 
 	@Operation(summary = "Listado de las peliculas", 
@@ -77,29 +79,29 @@ public class FilmResource {
 			responses = {
 					@ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, 
 							schema = @Schema(anyOf = {
-									FilmShortDTO.class, FilmDetailsDTO.class }))) })
+									FilmShort.class, FilmDetails.class }))) })
 	@GetMapping(params = { "page", "mode=details" })
 	@PageableAsQueryParam
 	@Transactional
-	public Page<FilmDetailsDTO> getAllDetailsPage(@Parameter(hidden = true) Pageable pageable,
+	public PagedModel<FilmDetails> getAllDetailsPage(@Parameter(hidden = true) Pageable pageable,
 			@RequestParam(defaultValue = "short") String mode) {
 		var content = srv.getAll(pageable);
-		return new PageImpl<>(content.getContent().stream().map(item -> FilmDetailsDTO.from(item)).toList(), pageable,
-				content.getTotalElements());
+		return new PagedModel<>(new PageImpl<>(content.getContent().stream().map(item -> FilmDetails.from(item)).toList(), pageable,
+				content.getTotalElements()));
 	}
 
 	@Hidden
 	@GetMapping
-	public List<FilmShortDTO> getAll(@RequestParam(defaultValue = "short") String mode) {
-		return srv.getByProjection(FilmShortDTO.class);
+	public List<FilmShort> getAll(@RequestParam(defaultValue = "short") String mode) {
+		return srv.getByProjection(FilmShort.class);
 	}
 
 	@Hidden
 	@GetMapping(params = "mode=details")
-	public List<FilmDetailsDTO> getAllDetails(
+	public List<FilmDetails> getAllDetails(
 //			@Parameter(allowEmptyValue = true, required = false, schema = @Schema(type = "string", allowableValues = {"details","short"}, defaultValue = "short")) 
 			@RequestParam(defaultValue = "short") String mode) {
-		return srv.getAll().stream().map(item -> FilmDetailsDTO.from(item)).toList();
+		return srv.getAll().stream().map(item -> FilmDetails.from(item)).toList();
 	}
 
 	record Search(
@@ -145,14 +147,14 @@ public class FilmResource {
 			throw new BadRequestException("Faltan los parametros de filtrado");
 		var query = srv.getAll(spec).stream();
 		if("short".equals(filter.mode))
-			return query.map(e -> FilmShortDTO.from(e)).toList();
+			return query.map(e -> FilmShort.from(e)).toList();
 		else {
-			return query.map(e -> FilmDetailsDTO.from(e)).toList();
+			return query.map(e -> FilmDetails.from(e)).toList();
 		}
 	}
 
 	@GetMapping(path = "/{id}", params = "mode=short")
-	public FilmShortDTO getOneCorto(
+	public FilmShort getOneCorto(
 			@Parameter(description = "Identificador de la pelicula", required = true) 
 			@PathVariable 
 			int id,
@@ -164,11 +166,11 @@ public class FilmResource {
 		Optional<Film> rslt = srv.getOne(id);
 		if (rslt.isEmpty())
 			throw new NotFoundException();
-		return FilmShortDTO.from(rslt.get());
+		return FilmShort.from(rslt.get());
 	}
 
 	@GetMapping(path = "/{id}", params = "mode=details")
-	public FilmDetailsDTO getOneDetalle(
+	public FilmDetails getOneDetalle(
 			@Parameter(description = "Identificador de la pelicula", required = true) @PathVariable int id,
 			@Parameter(required = false, schema = @Schema(type = "string", allowableValues = { "details", "short",
 					"edit" }, defaultValue = "edit")) @RequestParam(required = false, defaultValue = "edit") String mode)
@@ -176,15 +178,15 @@ public class FilmResource {
 		Optional<Film> rslt = srv.getOne(id);
 		if (rslt.isEmpty())
 			throw new NotFoundException();
-		return FilmDetailsDTO.from(rslt.get());
+		return FilmDetails.from(rslt.get());
 	}
 
 	@Operation(summary = "Recupera una pelicula", description = "Están disponibles una versión corta, una versión con los detalles donde se han transformado las dependencias en cadenas y una versión editable donde se han transformado las dependencias en sus identificadores.")
 	@GetMapping(path = "/{id}")
 	@ApiResponse(responseCode = "200", description = "Pelicula encontrada", content = @Content(schema = @Schema(oneOf = {
-			FilmShortDTO.class, FilmDetailsDTO.class, FilmEditDTO.class })))
+			FilmShort.class, FilmDetails.class, FilmEdit.class })))
 	@ApiResponse(responseCode = "404", description = "Pelicula no encontrada", content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
-	public FilmEditDTO getOneEditar(
+	public FilmEdit getOneEditar(
 			@Parameter(description = "Identificador de la pelicula", required = true) 
 			@PathVariable 
 			int id,
@@ -196,7 +198,7 @@ public class FilmResource {
 		Optional<Film> rslt = srv.getOne(id);
 		if (rslt.isEmpty())
 			throw new NotFoundException();
-		return FilmEditDTO.from(rslt.get());
+		return FilmEdit.from(rslt.get());
 	}
 
 	@Operation(summary = "Listado de los actores de la pelicula")
@@ -250,8 +252,8 @@ public class FilmResource {
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@Transactional
-	public ResponseEntity<Object> add(@RequestBody() FilmEditDTO item) throws Exception {
-		Film newItem = srv.add(FilmEditDTO.from(item));
+	public ResponseEntity<Object> add(@RequestBody() FilmEdit item) throws Exception {
+		Film newItem = srv.add(FilmEdit.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newItem.getFilmId()).toUri();
 		return ResponseEntity.created(location).build();
@@ -263,12 +265,12 @@ public class FilmResource {
 	@SecurityRequirement(name = "bearerAuth")
 //	@Transactional
 	@PutMapping(path = "/{id}")
-	public FilmEditDTO modify(
+	public FilmEdit modify(
 			@Parameter(description = "Identificador de la pelicula", required = true) @PathVariable int id,
-			@Valid @RequestBody FilmEditDTO item) throws Exception {
+			@Valid @RequestBody FilmEdit item) throws Exception {
 		if (item.getFilmId() != id)
 			throw new BadRequestException("No coinciden los identificadores");
-		return FilmEditDTO.from(srv.modify(FilmEditDTO.from(item)));
+		return FilmEdit.from(srv.modify(FilmEdit.from(item)));
 	}
 
 	@Operation(summary = "Borrar una pelicula existente")
@@ -300,8 +302,12 @@ public class FilmResource {
 	@PostMapping(path = "{id}/like")
 	public String like(@Parameter(description = "Identificador de la pelicula", required = true) @PathVariable int id,
 			@Parameter(hidden = true) @RequestHeader(required = false) String authorization) throws Exception {
-		if (authorization == null)
-			return proxy.sendLike(id);
-		return proxy.sendLike(id, authorization);
+		try {
+			if (authorization == null)
+				return proxy.sendLike(id);
+			return proxy.sendLike(id, authorization);
+		} catch(FeignException ex) {
+			throw new ResponseStatusException(ex.status() < 0 ? 500 : ex.status(), ex.getMessage(), ex);
+		}
 	}
 }

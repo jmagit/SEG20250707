@@ -31,6 +31,17 @@ public class WebSecurityConfig {
 	@Value("${jwt.key.public}")
 	private String SECRET;
 
+	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getAuthorizeHttpRequests() {
+        String[] swaggerPaths = { "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**" };
+        String[] publicPaths = { "/error", "/actuator/**", "/login/**", "/signature/**", "/hmac/**"};
+		return requests -> requests
+                .requestMatchers(HttpMethod.GET, "/*.*", "/").permitAll()
+                .requestMatchers(publicPaths).permitAll()
+                .requestMatchers(swaggerPaths).permitAll()
+                .requestMatchers(HttpMethod.GET, "/solo-admin").hasRole("ADMINISTRADORES")
+                .anyRequest().authenticated();
+	}
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
@@ -83,17 +94,6 @@ public class WebSecurityConfig {
 						})
  				 ).authorizeHttpRequests(getAuthorizeHttpRequests())
                 .build();
-	}
-
-	private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> getAuthorizeHttpRequests() {
-        String[] swaggerPaths = { "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**" };
-        String[] publicPaths = { "/error", "/actuator/**", "/login/**", "/signature/**", "/hmac/**"};
-		return requests -> requests
-                .requestMatchers(HttpMethod.GET, "/*.*", "/").permitAll()
-                .requestMatchers(publicPaths).permitAll()
-                .requestMatchers(swaggerPaths).permitAll()
-                .requestMatchers(HttpMethod.GET, "/solo-admin").hasRole("ADMINISTRADORES")
-                .anyRequest().authenticated();
 	}
 
 }

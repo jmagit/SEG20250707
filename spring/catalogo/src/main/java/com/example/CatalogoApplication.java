@@ -47,7 +47,7 @@ import jakarta.transaction.Transactional;
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 @EnableFeignClients
 public class CatalogoApplication implements CommandLineRunner {
-	private final Log log = LogFactory.getLog(getClass());
+	private final Log log = LogFactory.getLog(getClass().getSimpleName());
 
 	public static void main(String[] args) {
 		SpringApplication.run(CatalogoApplication.class, args);
@@ -79,6 +79,20 @@ public class CatalogoApplication implements CommandLineRunner {
 //    }
     
     // Domain events: https://microservices.io/patterns/data/domain-event.html
+    
+	@EventListener
+	void evento(DomainEvent event) {
+		log.warn("DomainEvent - ENTITY: %s (%s) KEY: %d OLD: %s NEW: %s".formatted(event.entity(), event.property(),
+                event.pk(), event.old(), event.current()));
+	}
+
+	// AOT: EntityChangedEventAspect
+	
+	@EventListener
+	void evento(EntityChangedEvent event) {
+		log.info("ENTITY: %s (%s) KEY: %d".formatted(event.entity(), event.type(), event.key()));
+	}
+
 
 //	@Autowired
 //	KafkaTemplate<String, String> kafkaTemplate;
@@ -99,11 +113,6 @@ public class CatalogoApplication implements CommandLineRunner {
 //			});
 //	}
 //	
-//	@EventListener
-//	void evento(DomainEvent event) {
-//		System.err.println(event);
-//	}
-
 //	@Autowired
 //	FilmRepository dao;
 //	@Autowired

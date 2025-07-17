@@ -17,6 +17,7 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -129,7 +130,7 @@ public class ApiExceptionHandler {
 //		return new ErrorMessage(404, exception.getMessage(), ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString(), null);
 //	}
 
-	@ExceptionHandler({ NotFoundException.class })
+	@ExceptionHandler({ NotFoundException.class, MissingPathVariableException.class })
 	public ProblemDetail notFoundRequest(Exception exception) {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
 	}

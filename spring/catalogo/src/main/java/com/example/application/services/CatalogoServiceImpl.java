@@ -13,7 +13,7 @@ import com.example.contracts.domain.services.CategoryService;
 import com.example.contracts.domain.services.FilmService;
 import com.example.contracts.domain.services.LanguageService;
 import com.example.domain.entities.models.ActorDTO;
-import com.example.domain.entities.models.FilmShortDTO;
+import com.example.domain.entities.models.FilmShort;
 
 @Service
 public class CatalogoServiceImpl implements CatalogoService {
@@ -32,7 +32,7 @@ public class CatalogoServiceImpl implements CatalogoService {
 		if(fecha == null)
 			fecha = Date.from(Instant.now().minusSeconds(36000));
 		return new NovedadesDTO(
-				filmSrv.novedades(fecha).stream().map(item -> new FilmShortDTO(item.getFilmId(), item.getTitle())).toList(), 
+				filmSrv.novedades(fecha).stream().map(item -> new FilmShort(item.getFilmId(), item.getTitle())).toList(), 
 				artorSrv.novedades(fecha).stream().map(item -> ActorDTO.from(item)).toList(), 
 				categorySrv.novedades(fecha), 
 				languageSrv.novedades(fecha)

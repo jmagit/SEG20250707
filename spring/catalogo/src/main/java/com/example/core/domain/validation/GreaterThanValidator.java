@@ -1,4 +1,4 @@
-package com.example.core.domain.validations;
+package com.example.core.domain.validation;
 
 import java.time.LocalDate;
 

@@ -4,17 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import jakarta.persistence.MappedSuperclass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import jakarta.persistence.Transient;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PostRemove;
+import jakarta.persistence.PostUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
+import jakarta.persistence.PreUpdate;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 @MappedSuperclass
 public abstract class AbstractEntity<E> {
 	private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+	@Transient
+	protected final Log log = LogFactory.getLog(getClass());
 	
 	@Transient
 	@JsonIgnore
@@ -60,4 +73,45 @@ public abstract class AbstractEntity<E> {
 		return !isValid();
 	}
 
+	@PostLoad
+	protected void postLoad() {
+		log.debug("PostLoad: " + this.getClass().getSimpleName() + " " + this.toString());
+	}
+
+	@PrePersist
+	protected void prePersist() {
+		log.debug("PrePersist: " + this.getClass().getSimpleName() + " " + this.toString());
+		if (isInvalid()) {
+			throw new ConstraintViolationException("Entidad no válida", getErrors());
+		}
+	}
+
+	@PreUpdate
+	protected void preUpdate() {
+		log.debug("PreUpdate: " + this.getClass().getSimpleName() + " " + this.toString());
+		if (isInvalid()) {
+			throw new ConstraintViolationException("Entidad no válida", getErrors());
+		}
+	}
+
+	@PreRemove
+	protected void preRemove() {
+		log.debug("PreRemove: " + this.getClass().getSimpleName() + " " + this.toString());
+	}
+
+	@PostPersist
+	protected void postPersist() {
+		log.debug("PostPersist: " + this.getClass().getSimpleName() + " " + this.toString());
+	}
+
+	@PostUpdate
+	protected void postUpdate() {
+		log.debug("PostUpdate: " + this.getClass().getSimpleName() + " " + this.toString());
+	}
+
+	@PostRemove
+	protected void postRemove() {
+		log.debug("PostRemove: " + this.getClass().getSimpleName() + " " + this.toString());
+	}
+	
 }

@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Schema(name = "Pelicula (Editar)", description = "Version editable de las películas")
 @Data @AllArgsConstructor @NoArgsConstructor
-public class FilmEditDTO {
+public class FilmEdit {
 	@Schema(description = "Identificador de la película", accessMode = AccessMode.READ_ONLY)
 	private int filmId;
 	@Schema(description = "Una breve descripción o resumen de la trama de la película", minLength = 2)
@@ -61,8 +61,8 @@ public class FilmEditDTO {
 	@ArraySchema(uniqueItems = true, minItems = 1, maxItems = 3)
 	private List<Integer> categories = new ArrayList<>();
 
- 	public static FilmEditDTO from(Film source) {
-		return new FilmEditDTO(
+ 	public static FilmEdit from(Film source) {
+		return new FilmEdit(
 				source.getFilmId(), 
 				source.getDescription(),
 				source.getLength(),
@@ -81,7 +81,7 @@ public class FilmEditDTO {
 					.collect(Collectors.toList())
 				);
 	}
-	public static Film from(FilmEditDTO source) {
+	public static Film from(FilmEdit source) {
 		Film rslt = new Film(
 				source.getFilmId(), 
 				source.getTitle(),

@@ -175,12 +175,15 @@ public class Actor extends AbstractEntity<Actor> implements Serializable {
 		
 	}
 
+	// Eventos de dominio
+	
 	@Transient
 	@JsonIgnore
 	private final Collection<Object> domainEvents = new ArrayList<>();
 
+	// registra los cambios en las propiedades de la entidad
 	protected void onChange(String property, Object old, Object current) {
-		domainEvents.add(new DomainEvent(getClass().getName(), actorId, property, old, current));
+		domainEvents.add(new DomainEvent(getClass().getSimpleName(), actorId, property, old, current));
 	}
 
 	@DomainEvents

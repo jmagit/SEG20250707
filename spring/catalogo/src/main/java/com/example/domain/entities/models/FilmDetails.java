@@ -12,7 +12,7 @@ import lombok.Value;
 
 @Schema(name = "Pelicula (Detalles)", description = "Version completa de las peliculas")
 @Value
-public class FilmDetailsDTO {
+public class FilmDetails {
 	@Schema(description = "Identificador de la pelicula", accessMode = AccessMode.READ_ONLY)
 	private int filmId;
 	@Schema(description = "Una breve descripción o resumen de la trama de la película")
@@ -43,8 +43,8 @@ public class FilmDetailsDTO {
 	@Schema(description = "La lista de categorías asignadas a la película")
 	private List<String> categories;
 
-	public static FilmDetailsDTO from(Film source) {
-		return new FilmDetailsDTO(source.getFilmId(), source.getDescription(), source.getLength(),
+	public static FilmDetails from(Film source) {
+		return new FilmDetails(source.getFilmId(), source.getDescription(), source.getLength(),
 				source.getRating() == null ? null : source.getRating().getValue(), source.getReleaseYear(),
 				source.getRentalDuration(), source.getRentalRate(), source.getReplacementCost(), source.getTitle(),
 				source.getLanguage() == null ? null : source.getLanguage().getName(),
